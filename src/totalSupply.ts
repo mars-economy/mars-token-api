@@ -13,7 +13,6 @@ export const handler: APIGatewayProxyHandler = async () => {
 
 const getTotalSupply = async (address: string): Promise<string> => {
   const token = erc20(address)
-  return (await token.totalSupply()).div(BigNumber.from(10).pow(18)).toString()
   const totalSupply = await token.totalSupply()
   return String(totalSupply.div(BigNumber.from(10).pow(18)).toNumber() + totalSupply.mod(BigNumber.from(10).pow(18)).div(BigNumber.from(10).pow(10)).toNumber() / 1e8)
 }
