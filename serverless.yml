@@ -64,7 +64,7 @@ functions:
       - http:
           method: get
           path: /totalSupply
-          private: true
+          private: false
           caching:
             enabled: true
             ttlInSeconds: 900
@@ -74,7 +74,7 @@ functions:
       - http:
           method: get
           path: /circulatingSupply
-          private: true
+          private: false
           caching:
             enabled: true
             ttlInSeconds: 900
