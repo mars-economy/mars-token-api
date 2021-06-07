@@ -13,11 +13,11 @@ $ yarn install
 ## Calling functions locally (Ropsten Network)
 ### Total supply
 ```sh
-$ yarn sls invoke local --function totalSupply --ethereum-network=mainnet
+$ yarn sls invoke local --function totalSupply --ethereum-network=bsc
 ```
 ### Circulating supply
 ```sh
-$ yarn sls invoke local --function circulatingSupply --ethereum-network=mainnet
+$ yarn sls invoke local --function circulatingSupply --ethereum-network=bsc
 ```
 ## Deploying the API
 
