@@ -1,0 +1,80 @@
+service:
+  name: mars-token-api-auth
+
+frameworkVersion: ">=2.22.0 <3.0.0"
+
+provider:
+  name: aws
+  region: eu-central-1
+  runtime: nodejs14.x
+  memorySize: 320 # optional, in MB, default is 1024
+  timeout: 300 # optional, in seconds, default is 6
+  logRetentionInDays: 1
+  environment:
+    jsonRpcProvider: ${self:custom.config.${opt:ethereum-network}.jsonRpcProvider}
+    tokenAddress: ${self:custom.config.${opt:ethereum-network}.tokenAddress}
+    ownerAddress: ${self:custom.config.${opt:ethereum-network}.ownerAddress}
+
+  apiGateway:
+    usagePlan:
+      - low: # 5 QPS
+          quota:
+            limit: 500000 # 5 * 60 * 60 * 24
+            period: DAY
+          throttle:
+            burstLimit: 10
+            rateLimit: 5
+      - medium: # 50 QPS
+          quota:
+            limit: 5000000 # 50 * 60 * 60 * 24 rounded up
+            period: DAY
+          throttle:
+            burstLimit: 100
+            rateLimit: 50
+      - high: # 100 QPS
+          quota:
+            limit: 10000000 # 100 * 60 * 60 * 24 rounded up
+            period: DAY
+          throttle:
+            burstLimit: 200
+            rateLimit: 100
+
+custom:
+  # Enable or disable caching globally
+  apiGatewayCaching:
+    enabled: true
+    clusterSize: '0.5' # defaults to '0.5'
+    ttlInSeconds: 300 # defaults to the maximum allowed: 3600
+  contentEncoding:
+    minimumCompressionSize: 0 # Minimum body size required for compression in bytes
+  config:
+    bsc:
+      jsonRpcProvider: https://bsc-dataseed.binance.org
+      tokenAddress: "0x77dA5632d829b457cd6d0dE37768eF9d5C879A6C"
+      ownerAddress: "0xfdc3ef1a7d5b31ebef5f9a62ebb50574d4a7604d"
+plugins:
+  - serverless-plugin-typescript
+  - serverless-api-gateway-caching
+  - serverless-content-encoding
+
+functions:
+  totalSupply:
+    handler: src/totalSupply.handler
+    events:
+      - http:
+          method: get
+          path: /totalSupply
+          private: true
+          caching:
+            enabled: true
+            ttlInSeconds: 900
+  circulatingSupply:
+    handler: src/circulatingSupply.handler
+    events:
+      - http:
+          method: get
+          path: /circulatingSupply
+          private: true
+          caching:
+            enabled: true
+            ttlInSeconds: 900
