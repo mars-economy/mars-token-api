@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "yarn eslint ./src/**/*.ts --fix && yarn prettier ./src/**/*.ts --write",
     "typechain": "typechain --target=ethers-v5 --outDir typechain './src/abi/*.json'",
-    "deploy": "yarn generate && yarn typechain && sls deploy --ethereum-network=bsc"
+    "deploy": "yarn typechain && sls deploy --ethereum-network=bsc"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.20.1",
